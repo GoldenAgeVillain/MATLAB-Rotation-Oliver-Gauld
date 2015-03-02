@@ -39,8 +39,9 @@ epsc_cond_max = 2;                %[nS] peak conductance
 epsc_duration = 4;                %[ms]
 wave_length = (epsc_duration)/dt; % defines length of the epsp in terms of number of 'dt' timesteps
 t = 0:wave_length;                %[ms]
-epsp1 = epsc_cond_max*exp(-t/tau); % exponential decay function
-epsp = [0 0.5 1 1.5 2 epsp1];
+t = t+5;
+epsp = epsc_cond_max*exp(-t/tau); % exponential decay function
+epsp(1)=0;
 
 gsyn = conv(spikeTrainRaw,epsp,'same'); % convolve spike train with epsp
 plot((dt:dt:(bins_per_sec*dt)),gsyn(1:bins_per_sec))

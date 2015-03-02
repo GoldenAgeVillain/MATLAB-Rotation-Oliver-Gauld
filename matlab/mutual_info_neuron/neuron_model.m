@@ -1,4 +1,4 @@
-function [tspan1,gsyn, data_AP, APfreq, iInj_plot, ind] = neuron_model(switchPlot)
+function [tspan1,data, data_AP, APfreq, iInj_plot, ind,spikeTrain1Sec, gsyn] = neuron_model(switchPlot)
 
 global tstart dt DT AP starthere tlast tauM scalefactor Rm Vthresh tm s0 EAMPA EL Vspike thresholds scaling;
 
@@ -7,25 +7,24 @@ seed    = 62;
 rng(seed);          % seed the RNG
 
 dt = 0.05; % ms
-how_many_seconds = 10; % [seconds]
+how_many_seconds = 1; % [seconds]
 DT = how_many_seconds * 1000; % ms
-EAMPA = 0;
-EL = -70;
-s0 = EL;
+EAMPA = 0;      % mV
+EL = -70;       % mV
+s0 = EL;        % mV
 
-Vthresh = -50;
-Vspike = 10;
-Rm = 90;
-tauM = 30;
+Vthresh = -50;  % mV
+Vspike = 10;    % mV
+Rm = 90;        % MOhms
+tauM = 30;      % ms
 
-gNoise = 0.001+0.12*randn((DT/dt+1),1);
-gNoise(gNoise < 0)=0;% [mS]
-gNoise = (gNoise/10);
-gNoise = gNoise * 0.65;
+gNoise = 0.01+0.12*randn((DT/dt+1),1);
+gNoise(gNoise < 0)=0;% [nS]
+gNoise = gNoise;
 
 [spikeTrainRaw, spikeTrain1Sec, countTotal, count1sec, epsp, gsyn] = rand_spike_train;
 
-gCond = gNoise + gsyn;
+gCond = gsyn + gNoise;
 
 
 options = odeset('MaxStep',dt,'RelTol',1e-03,'OutputFcn',@myfun,'Event',@myEvent);
@@ -63,7 +62,8 @@ end
 %% main nested subfunction
     function ds = fxn(t,s)
         V = s(1);
-        iInj    = -gCond(floor(t/dt)+1)*(V-EAMPA); % [nA]
+        iInj    = -gCond(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
+        iInj = iInj / 1000; % [nA]
         iInj_plot(floor(t/dt)+1)=iInj; % creates vector for plotting current inject over time
         ds(1) = (EL - V + (Rm * iInj))/tauM;       % solves for V      
         ds     = ds';                               % transpose the vector of derivatives
