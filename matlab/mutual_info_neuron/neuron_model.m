@@ -1,6 +1,6 @@
 function [tspan1,data, data_AP, APfreq, iInj_plot, ind,spiketrain, gsyn] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
 
-global tstart dt DT AP starthere tlast tauM scalefactor Rm Vthresh tm s0 EAMPA EL Vspike thresholds scaling;
+global tstart dt DT AP starthere tlast tauM Rm Vthresh s0 EAMPA EL Vspike;
 
 %% generate a random conductance
 seed    = 62;
