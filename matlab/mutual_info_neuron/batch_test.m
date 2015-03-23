@@ -2,7 +2,8 @@ global nreps
 
 nreps = 50;
 
-gsyn_scale_factors = [5,10,15,20];
+
+gsyn_scale_factors = [1,5,10,15,20];
 noise_scale_factors = [0.5,1,5,10];
 
 %% run simulations to generate data
@@ -20,7 +21,7 @@ for pp = 1:length(noise_scale_factors)
             data_store{i,1} = data_AP; % membrane voltage trace with APs
             data_store{i,2} = data;% membrane voltage trace without APs
             data_store{i,3} = APfreq; % Action potential Frequency in Hz
-            data_store{i,4} = spiketrain; % input spike train
+            data_store{i,4} = spiketrain; % input spike train, 
             data_store{i,5} = MIenergy_calc(iInj_plot,data_store{i,3}); % calculate ATP used on current and APs
             data_store{i,6} = noise_scaler; % noise scale factor
             data_store{i,7} = gsyn_scaler; % gsyn scale factor           
