@@ -3,7 +3,7 @@
 gsyn_scale_factors = [1,5,10,15,20];
 noise_scale_factors = [0.5,1,1.5,2];
 
-for pp = 1:2;%length(noise_scale_factors)
+for pp = 1:3;%length(noise_scale_factors)
     noise_scaler = noise_scale_factors(pp);
     
     for p = 1:length(gsyn_scale_factors)
@@ -27,6 +27,7 @@ for myplot = 1:length(EnergyEfficiency(:,1))
     
    subplot(3,1,1)
       plot(xaxis,MI_data(myplot,:),'.r')
+      xlim([0 60])
       hold on   
 
    subplot(3,1,2)

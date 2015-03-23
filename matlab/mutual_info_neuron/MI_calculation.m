@@ -2,8 +2,8 @@ function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_reps, spiketrain);
 
 global nreps
 %% 
- all_data_reps=data_store(:,1);
- spiketrain=data_store{1,4};
+%  all_data_reps=data_store(:,1);
+%  spiketrain=data_store{1,4};
 
 for loop = 1:size(all_data_reps,1)
     data_array(loop,:) = all_data_reps{loop,1}';
@@ -94,11 +94,11 @@ end
 for x = 1:nreps
     
      word = noisewords(x,:);
-     noiseprobs = sort(countmember(unique(word),word),'descend')/length(binned_spiketrain); % vector of all words probabilities
+     response_probs = sort(countmember(unique(word),word),'descend')/length(binned_spiketrain); % vector of all words probabilities
 
      %% response entropy calculation
-     for i4 = 1:length(noiseprobs)        
-         H(i4) = noiseprobs(i4)*log2(noiseprobs(i4));
+     for i4 = 1:length(response_probs)        
+         H(i4) = response_probs(i4)*log2(response_probs(i4));
      end
 
      entropy(x) = -sum(H);

@@ -3,7 +3,9 @@ function [totalATPuse] = MIenergy_calc(currentTrace, APfreq)
 % input = post synaptic currentTrace and number of Action potentials
 global  Cm
 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%% ATP on single ActionPotential %%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         voltjump = 60; % [mV] -50mV ==> + 10mV
         
