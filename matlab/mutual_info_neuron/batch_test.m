@@ -3,11 +3,11 @@ global nreps
 nreps = 50;
 
 gsyn_scale_factors = [1,5,10,15,20];
-noise_scale_factors = [0.5,1,5,10];
+noise_scale_factors = [0.5,1,1.5,2];
 
 %% run simulations to generate data
 
-for pp = 1:length(noise_scale_factors)
+for pp = 3:length(noise_scale_factors)
     noise_scaler = noise_scale_factors(pp);
     
     for p = 1:length(gsyn_scale_factors)
