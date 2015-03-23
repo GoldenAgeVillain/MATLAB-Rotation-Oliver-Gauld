@@ -24,7 +24,7 @@ gNoise = gNoise;
 
 [spikeTrainRaw, spikeTrain1Sec, countTotal, count1sec, epsp, gsyn] = rand_spike_train;
 
-gCond = gsyn + gNoise;
+gCond = gsyn;% + gNoise;
 
 
 options = odeset('MaxStep',dt,'RelTol',1e-03,'OutputFcn',@myfun,'Event',@myEvent);
@@ -64,6 +64,7 @@ end
         V = s(1);
         iInj    = -gCond(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
         iInj = iInj / 1000; % [nA]
+   %     iInj = iInj * 10;
         iInj_plot(floor(t/dt)+1)=iInj; % creates vector for plotting current inject over time
         ds(1) = (EL - V + (Rm * iInj))/tauM;       % solves for V      
         ds     = ds';                               % transpose the vector of derivatives
