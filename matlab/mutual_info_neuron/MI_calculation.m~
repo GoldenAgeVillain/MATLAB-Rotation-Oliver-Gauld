@@ -1,14 +1,12 @@
 function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_reps, spiketrain);
 
 global nreps
-
+%% 
  all_data_reps=data_store(:,1);
  spiketrain=data_store{1,4};
-
+% 
 for loop = 1:size(all_data_reps,1)
-
-data_array(loop,:) = all_data_reps{loop,1}';
-
+    data_array(loop,:) = all_data_reps{loop,1}';
 end
 
 %% parameters
@@ -111,7 +109,6 @@ end
 
 Htotal = mean(entropy_rate); % takes the mean of all 50 repetitions
 
-
 %% Hnoise, takes column responses for each t step then calculates entropy and averages
 for i5 = 1:length(all_words)
 
@@ -125,12 +122,12 @@ for i5 = 1:length(all_words)
     end
 
     H=sum(H);
-    H = H*(1/(Ts/1000)); 
+    H = H*(1/(Ts/1000)); % divide by 1000 to get rate per sec (Ts is millisecss)
     Hnoise(i5)=H;
     clear H
 end
 
-final_Hnoise = -sum(Hnoise)*(timebin/T); % average of all noise CHECK RATE UNITS
+final_Hnoise = -sum(Hnoise)/length(Hnoise); % average of all noise CHECK RATE UNITS
 MI = Htotal - final_Hnoise;
 
 %data_fraction_entropy_estimation(all_words, wordlength, Ts, T)
