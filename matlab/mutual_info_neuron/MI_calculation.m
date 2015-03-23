@@ -2,8 +2,8 @@ function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_reps, spiketrain);
 
 global nreps
 
-% all_data_reps=data_store(:,1);
-% spiketrain=data_store{1,4};
+ all_data_reps=data_store(:,1);
+ spiketrain=data_store{1,4};
 
 for loop = 1:size(all_data_reps,1)
 
@@ -16,7 +16,7 @@ dt = 0.5; % mV
 timebin = 3; % ms
 wordlength = 5; % in bins i.e. = 15ms
 Ts = timebin * wordlength; % duration of 'word' in ms
-T = 10000; % total time in SECONDS
+T = 10000; % total time in ms
 APpeak = 10; % mV
 
 % binarize data
@@ -125,7 +125,7 @@ for i5 = 1:length(all_words)
     end
 
     H=sum(H);
-    H = H*(1/Ts);
+    H = H*(1/(Ts/1000)); 
     Hnoise(i5)=H;
     clear H
 end
@@ -134,23 +134,5 @@ final_Hnoise = -sum(Hnoise)*(timebin/T); % average of all noise CHECK RATE UNITS
 MI = Htotal - final_Hnoise;
 
 %data_fraction_entropy_estimation(all_words, wordlength, Ts, T)
-
-
-
-% V = (0.05:0.05:1)'; % this scales the data for visualisation
-% for i = 1:length(V)
-%     D(i,:) = (binned_data(i,:).*V(i));
-% end
-
-% %% raster plot
-% subplot(2,1,1)
-% plot(binned_spiketrain,'-b')
-% ylim([0 3])
-% for i = 1:reps
-%     subplot(2,1,2)
-%     %D(D==0)=NaN; % set 0's to nans so they don't get plotted 
-%     plot(D(i,:),'.r')
-%     hold on
-% end
 
 end
