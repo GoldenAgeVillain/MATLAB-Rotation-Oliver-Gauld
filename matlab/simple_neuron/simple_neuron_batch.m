@@ -28,7 +28,6 @@ for i = 1:length(Rmem)
        Cm = cm * Area; % [nF]
        
        data{ii,7}=Cm;
-
        data{ii,5} = energy_calc(i,ii); % total ATP used 
    end
        filename = ['output/simulation_results/largescalerange/Vthresh' num2str(Vthresh) '.mat'];
