@@ -1,10 +1,8 @@
-function [spiketrain, spikeTrain1Sec, countTotal, count1sec, epsp, gsyn] = rand_spike_train();
+function [spiketrain, gsyn] = rand_spike_train();
 
 global DT dt
 
 DT = 1000; %[ms]
-
-% bins, in seconds
 dt = 0.5; % [ms]
 bins_per_sec = 1000 * (1/dt);
 
@@ -12,33 +10,30 @@ ii=1;
 
 for i = 1:10
 
-% make random spike train
-spikeTrainRaw = rand((bins_per_sec * (DT/1000)),1); % random numbers between 0 and 1
-spikeTrainRaw(1:6) = 1; % set to 1 avoids APs in first 3ms of sequence
-spikeFreq = 20; %[Hz]
+    % make random spike train
+    spikeTrainRaw = rand((bins_per_sec * (DT/1000)),1); % random numbers between 0 and 1
+    spikeTrainRaw(1:6) = 1; % set to 1 avoids APs in first 3ms of sequence
+    spikeFreq = 20; %[Hz]
 
-% probability of spike in time step 0.05ms
-prob = (spikeFreq / 1000) * dt; 
-spikeTrainRaw = double(spikeTrainRaw < prob); %threshold
+    % probability of spike in time step 0.05ms
+    prob = (spikeFreq / 1000) * dt; 
+    spikeTrainRaw = double(spikeTrainRaw < prob); %threshold
 
-% this ensures spikes are at least 3ms (6*0.05ms) away from each other
-while any(diff(find(spikeTrainRaw == 1)) <= 6) 
-% make random spike train
-spikeTrainRaw = rand((bins_per_sec * (DT/1000)),1); % random numbers between 0 and 1
-spikeTrainRaw(1:6) = 1; 
+    % this ensures spikes are at least 3ms (6*0.05ms) away from each other
 
-% probability of spike in time bin 0.05ms
-prob = (spikeFreq / 1000) * dt; 
-spikeTrainRaw = double(spikeTrainRaw < prob); %threshold
-end 
-spiketrain(ii:i*length(spikeTrainRaw),1) = spikeTrainRaw;
-ii = ii + length(spikeTrainRaw);
+    while any(diff(find(spikeTrainRaw == 1)) <= 6) 
+        % make random spike train
+        spikeTrainRaw = rand((bins_per_sec * (DT/1000)),1); % random numbers between 0 and 1
+        spikeTrainRaw(1:6) = 1; 
+        % probability of spike in time bin 0.05ms
+        prob = (spikeFreq / 1000) * dt; 
+        spikeTrainRaw = double(spikeTrainRaw < prob); %threshold
+    end 
+
+    spiketrain(ii:i*length(spikeTrainRaw),1) = spikeTrainRaw;
+    ii = ii + length(spikeTrainRaw);
+    
 end
-spikeTrain1Sec = spikeTrainRaw(1:bins_per_sec); 
-
-% count spikes
-countTotal = length(spikeTrainRaw(spikeTrainRaw==1)) ;
-count1sec = length(spikeTrain1Sec(spikeTrain1Sec==1));
 
 %% parameters for epsc 
 
@@ -58,7 +53,5 @@ epsp = galpha;
 
 gsyn = conv(spiketrain,epsp); % convolve spike train with epsp
 gsyn(length(gsyn)-14:length(gsyn))=[]; % this is needed to make sure vector is correct length
-%plot((dt:dt:(bins_per_sec*dt)),gsyn(1:bins_per_sec))
-%ylim([0 gamplitude]);
 
 end

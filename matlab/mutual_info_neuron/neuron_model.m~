@@ -1,14 +1,9 @@
 function [tspan1,data, data_AP, APfreq, iInj_plot, ind,spiketrain, gsyn] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
 
-global tstart dt DT AP starthere tlast tauM scalefactor Rm Vthresh tm s0 EAMPA EL Vspike thresholds scaling;
-
-%% generate a random conductance
-seed    = 62;
-rng(seed);          % seed the RNG
+global tstart dt DT AP starthere tlast tauM Rm Vthresh s0 EAMPA EL Vspike;
 
 dt = 0.5; % ms
 how_many_seconds = 10; % [seconds]
-DT = how_many_seconds * 1000; % ms
 EAMPA = 0;      % mV
 EL = -70;       % mV
 s0 = EL;        % mV
@@ -18,11 +13,16 @@ Vspike = 10;    % mV
 Rm = 90;        % MOhms
 tauM = 30;      % ms
 
-[spiketrain, spikeTrain1Sec, countTotal, count1sec, epsp, gsyn] = rand_spike_train;
+seed    = 62;
+rng(seed);          % seed the RNG
+
+% generate spike train
+[spiketrain, gsyn] = rand_spike_train;
 
 DT = how_many_seconds * 1000; % ms
 
 rng('shuffle'); % restores rand generator for random syn noise
+
 gNoise = 3+0.12*randn(length(gsyn),1);
 gNoise(gNoise < 0)=0;% [nS]
 
