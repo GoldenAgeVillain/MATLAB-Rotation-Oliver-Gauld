@@ -63,7 +63,7 @@ end
 Htotal = mean(entropy_rate); % takes the mean of all 50 repetitions
 
 %% Hnoise, takes column responses for each t step then calculates entropy and averages
-for i = 1:length(all_words)
+for i = 1:length(noisewords)
 
     column = noisewords(:,i);
     column_words = unique(column)'; % finds unique 'words' in the column
@@ -80,7 +80,7 @@ for i = 1:length(all_words)
     clear H
 end
 
-final_Hnoise = -sum(Hnoise)/length(Hnoise); % average of all noise CHECK RATE UNITS
+final_Hnoise = -sum(Hnoise)/length(Hnoise);
 MI = Htotal - final_Hnoise;
 
 end

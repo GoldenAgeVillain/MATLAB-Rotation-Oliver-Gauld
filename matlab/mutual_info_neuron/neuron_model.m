@@ -22,11 +22,12 @@ rng(seed);          % seed the RNG
 DT = how_many_seconds * 1000; % ms
 
 rng('shuffle'); % restores rand generator for random syn noise
-
-gNoise = 3+0.12*randn(length(gsyn),1);
+gNoise_mean = 3.45;
+gNoise = gNoise_mean+3.45*randn(length(gsyn),1);
 gNoise(gNoise < 0)=0;% [nS]
 
 gTotal = (gsyn*gsyn_scaler) + (gNoise*noise_scaler);
+
 
 options = odeset('MaxStep',dt,'RelTol',1e-03,'OutputFcn',@myfun,'Event',@myEvent);
 tspan1   = 0:dt:DT;% to get full length of array
