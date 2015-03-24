@@ -15,7 +15,7 @@ for pp = 1:length(noise_scale_factors)
 
         for i = 1:nreps   
             
-            [tspan1,data, data_AP, APfreq, iInj_plot, ind,spiketrain, gsyn] = neuron_model(0,noise_scaler,gsyn_scaler);
+            [tspan1,data, data_AP, APfreq, iInj_plot,spiketrain, gsyn] = neuron_model(0,noise_scaler,gsyn_scaler);
 
             data_store{i,1} = data_AP; % membrane voltage trace with APs
             data_store{i,2} = data;% membrane voltage trace without APs
@@ -33,10 +33,13 @@ for pp = 1:length(noise_scale_factors)
         save(fname1,'data_store');
 
         %% calculate and save MI and energy parameters
-        AverageEnergyRate = mean(horzcat(data_store{:,5})); %takes mean energypersecond across all repetitions
-        [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1),data_store{1,4}); % calulates Mutual Info
+        AverageEnergyRate = mean(horzcat(data_store{:,5})); %averages energy per second across all repetitions
+
+        [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1)); % calulates Mutual Info
+
         MI_energy_params = [MI, Htotal, final_Hnoise, AverageEnergyRate]; % all units in rate per sec
         fname2 = ['output/noise_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) 'MIandEnergySummaryParams.mat'];
         save(fname2,'MI_energy_params');
+        
     end
 end

@@ -3,21 +3,24 @@ function [totalATPuse] = MIenergy_calc(currentTrace, APfreq)
 % input = post synaptic currentTrace and number of Action potentials
 global  Cm
 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%% ATP on single ActionPotential %%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         voltjump = 60; % [mV] -50mV ==> + 10mV
         
         NaCharge   = 1.6022e-19; % (C) elementary charge of Na+
 
+        %%%%%%%% calculate membrane capacitance %%%%%%%     
+
         Rm = 90;        % MOhms
-        tauM = 30;      % ms
-       
-        %% calculate membrane capacitance         
-        cm = 10; %[nF/mm2]
+        tauM = 30;      % ms      
+        cm = 10;        %[nF/mm2]
         rm = tauM / cm; %[MOhms x mm2]
         Area = rm / Rm; % [mm2]
         Cm = cm * Area; % [nF]
        
+        % calculate charge entry needed to raise membran
         % Q = CV
         charge = Cm * voltjump;       % pC = nF * mV
                                       % pC = nA * ms
