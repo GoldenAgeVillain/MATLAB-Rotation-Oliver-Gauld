@@ -1,7 +1,6 @@
 function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_repeats);
 
 % MI = Htotal - Hnoise
-
 global nreps
 
 % organise the data

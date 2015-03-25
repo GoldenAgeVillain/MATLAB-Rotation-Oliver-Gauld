@@ -75,6 +75,10 @@ end
 
 %% add spikes into data
 data = data'; % flip it
+if length(data) > (DT/dt)+1
+    data((DT/dt)+2:end)=[];
+end
+
 ind = zeros(length(data),1); % create index for threshold
 ind(data >= Vthresh) = 1; 
 data_AP = data;
