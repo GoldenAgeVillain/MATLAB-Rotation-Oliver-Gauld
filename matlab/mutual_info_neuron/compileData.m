@@ -30,7 +30,7 @@ EnergyEfficiency = MI_data ./ Energy_data;
 
 xaxis = 2.*gsyn_scale_factors; % to get x axis ticks, 2 = original amplitude of EPSConductance wave
 cc=hsv(length(noise_scale_factors));
-mark = {'-o','-x','-d'}
+mark = {'-o','-x','-d'};
 
 % plots for each noise level
 for myplot = 1:length(EnergyEfficiency(:,1))
