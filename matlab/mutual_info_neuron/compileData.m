@@ -78,7 +78,7 @@ for myplot = 1:length(EnergyEfficiency(:,1))
    subplot(3,3,4)
       plot(xaxis,Energy_on_current(myplot,:),mark{myplot},'color',cc(myplot,:))
       hold on   
-      title('ATP on current only')
+      title('ATP on EPSCurrent only')
       ylabel('ATP/sec')
       xlabel('gsyn [nS]')
 
@@ -125,71 +125,71 @@ for myplot = 1:length(EnergyEfficiency(:,1))
       
 end
 
-%%% plot as function of gNoise
-
-figure(2)
-cc=hsv(length(EnergyEfficiency(1,:)));
-xaxis = 3.45.*noise_scale_factors; % to get x axis ticks, 2 = original amplitude of EPSConductance wave
-
-for myplot = 1:2:length(EnergyEfficiency(1,:))
-    % xaxis is gSyn in nS
-    % Mutual Info
-    
-   subplot(2,4,1)
-      plot(xaxis,MI_data(:,myplot),'color',cc(myplot,:))
-      hold on     
-      title('Mutual Info')
-      ylabel('bits/sec')
-      xlabel('gNoise mean [nS]')
-      legend
-      
-          %AP freq
-   subplot(2,4,2)
-      plot(xaxis,MIperSpike(:,myplot),'color',cc(myplot,:))
-      hold on  
-      title('MI per Spike')
-      xlabel('gNoise mean [nS]')
-      ylabel('bits/APspike')    
-            
-    % Energy
-   subplot(2,4,3)
-      plot(xaxis,Energy_data(:,myplot),'color',cc(myplot,:))
-      hold on   
-      title('ATP (current + APs)')
-      ylabel('ATP/sec')
-      xlabel('gNoise mean [nS]')
-    % Energy
-    
-   subplot(2,4,4)
-      plot(xaxis,Energy_on_current(:,myplot),'color',cc(myplot,:))
-      hold on   
-      title('ATP on current only')
-      ylabel('ATP/sec')
-      xlabel('gNoise mean [nS]')
-
-   % MI / Energy
-   subplot(2,4,5)
-      plot(xaxis,currentEnergyEfficiency(:,myplot),'color',cc(myplot,:))
-      hold on   
-      title('Information Efficiency (current energy only)')
-      ylabel('bits/ATP')
-      xlabel('gNoise mean [nS]')
-
-       % MI / Energy
-   subplot(2,4,6)
-      plot(xaxis,EnergyEfficiency(:,myplot),'color',cc(myplot,:))
-      hold on   
-      title('Information Efficiency (current + AP energy)')
-      ylabel('bits/ATP')
-      xlabel('gNoise mean [nS]')
-      
-
-   %AP freq
-   subplot(2,4,7)
-      plot(xaxis,mean_freq_Hz(:,myplot),'color',cc(myplot,:))
-      hold on  
-      title('AP freq.')
-      xlabel('gNoise mean [nS]')
-      ylabel('Freq. Hz')
-      
-end
+% %%% plot as function of gNoise
+% 
+% figure(2)
+% cc=hsv(length(EnergyEfficiency(1,:)));
+% xaxis = 3.45.*noise_scale_factors; % to get x axis ticks, 2 = original amplitude of EPSConductance wave
+% 
+% for myplot = 1:2:length(EnergyEfficiency(1,:))
+%     % xaxis is gSyn in nS
+%     % Mutual Info
+%     
+%    subplot(2,4,1)
+%       plot(xaxis,MI_data(:,myplot),'color',cc(myplot,:))
+%       hold on     
+%       title('Mutual Info')
+%       ylabel('bits/sec')
+%       xlabel('gNoise mean [nS]')
+%       legend
+%       
+%           %AP freq
+%    subplot(2,4,2)
+%       plot(xaxis,MIperSpike(:,myplot),'color',cc(myplot,:))
+%       hold on  
+%       title('MI per Spike')
+%       xlabel('gNoise mean [nS]')
+%       ylabel('bits/APspike')    
+%             
+%     % Energy
+%    subplot(2,4,3)
+%       plot(xaxis,Energy_data(:,myplot),'color',cc(myplot,:))
+%       hold on   
+%       title('ATP (current + APs)')
+%       ylabel('ATP/sec')
+%       xlabel('gNoise mean [nS]')
+%     % Energy
+%     
+%    subplot(2,4,4)
+%       plot(xaxis,Energy_on_current(:,myplot),'color',cc(myplot,:))
+%       hold on   
+%       title('ATP on current only')
+%       ylabel('ATP/sec')
+%       xlabel('gNoise mean [nS]')
+% 
+%    % MI / Energy
+%    subplot(2,4,5)
+%       plot(xaxis,currentEnergyEfficiency(:,myplot),'color',cc(myplot,:))
+%       hold on   
+%       title('Information Efficiency (current energy only)')
+%       ylabel('bits/ATP')
+%       xlabel('gNoise mean [nS]')
+% 
+%        % MI / Energy
+%    subplot(2,4,6)
+%       plot(xaxis,EnergyEfficiency(:,myplot),'color',cc(myplot,:))
+%       hold on   
+%       title('Information Efficiency (current + AP energy)')
+%       ylabel('bits/ATP')
+%       xlabel('gNoise mean [nS]')
+%       
+% 
+%    %AP freq
+%    subplot(2,4,7)
+%       plot(xaxis,mean_freq_Hz(:,myplot),'color',cc(myplot,:))
+%       hold on  
+%       title('AP freq.')
+%       xlabel('gNoise mean [nS]')
+%       ylabel('Freq. Hz')
+%       
+% end
