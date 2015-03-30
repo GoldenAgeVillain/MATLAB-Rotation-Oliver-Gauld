@@ -1,4 +1,4 @@
-function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, Synaptic_Na_current,wholecell_Na_current] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
+function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, Synaptic_Na_current,wholecell_Na_current,total_synaptic_current] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
 
 global tstart dt DT
 
@@ -77,7 +77,9 @@ end
         
         synapse_iNa    = -gNa_synapse(floor(t/dt)+1)*(V-ENa); % nS * mV = [pA]
         Wholecell_iNa = -gNa_wholecell(floor(t/dt)+1)*(V-ENa); % nS * mV = [pA]
-                
+        
+        Total_synaptic_current = -gsyn(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
+        
         %% injected current
         iInj    = -gTotal(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
         iInj = iInj / 1000; % [nA]
@@ -86,6 +88,7 @@ end
         
         Synaptic_Na_current(floor(t/dt)+1)= synapse_iNa / 1000; % nA
         wholecell_Na_current(floor(t/dt)+1)= Wholecell_iNa / 1000; % nA
+        total_synaptic_current(floor(t/dt)+1)= Total_synaptic_current / 1000; % nA
         
         ds(1) = (EL - V + (Rm * iInj))/tauM;        % solves for V      
         ds     = ds';                               % transpose the vector of derivatives

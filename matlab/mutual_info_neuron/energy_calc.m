@@ -1,4 +1,4 @@
-function [totalATPuse] = energy_calc(currentTrace, APfreq)
+function [totalATPuse, currentATPuse, AP_ATPuse] = energy_calc(currentTrace, APfreq)
 
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,7 +54,8 @@ function [totalATPuse] = energy_calc(currentTrace, APfreq)
 
         % Calculate no ATP molecules needed:
         currentATPuse  = NaEntry/3;                 % average ATP use per sec
- 
+        AP_ATPuse = (APfreq * AP_ATP);
+               
         % times by AP freq (in Hz) to get energy use on APs per seconds          
-        totalATPuse = currentATPuse + (APfreq * AP_ATP);
+        totalATPuse = currentATPuse + AP_ATPuse;
 end
