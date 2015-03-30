@@ -5,7 +5,7 @@ function [totalATPuse] = energy_calc(currentTrace, APfreq)
         %%%%%%%% ATP on single ActionPotential %%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        voltjump = 70; % [mV] -50mV ==> + 10mV       
+        voltjump = 70; % [mV] -50mV ==> + 20mV       
         NaCharge   = 1.6022e-19; % (C) elementary charge of Na+
 
         %%%%%%%% calculate membrane capacitance %%%%%%%     
@@ -17,7 +17,7 @@ function [totalATPuse] = energy_calc(currentTrace, APfreq)
         Area = rm / Rm; % [mm2]
         Cm = cm * Area; % [nF]
        
-        % calculate charge entry needed to raise membrane potential        
+        % calculate charge entry needed to raise membrane potential by 70mV        
         % Q = CV
         
         charge = Cm * voltjump;       % pC = nF * mV

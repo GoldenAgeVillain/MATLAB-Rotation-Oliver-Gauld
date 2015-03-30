@@ -1,7 +1,8 @@
-function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_repeats);
+function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_repeats,wordlength);
 
 % MI = Htotal - Hnoise
 global nreps
+nreps = 50
 
 % organise the data
 for loop = 1:size(all_data_repeats,1)
@@ -11,7 +12,7 @@ end
 % parameters
 dt = 0.5; % mV
 timebin = 3; % ms
-wordlength = 5; % in bins i.e. = 15ms
+%wordlength = 5; % in bins i.e. = 15ms
 Ts = timebin * wordlength; % duration of 'word' in ms
 T = 10000; % total time in ms
 APpeak = 10; % mV
