@@ -1,4 +1,4 @@
-function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
+function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, Synaptic_Na_current,wholecell_Na_current,total_synaptic_current] = neuron_model(switchPlot,noise_scaler,gsyn_scaler);
 
 global tstart dt DT
 
@@ -26,8 +26,18 @@ gNoise_mean = 3.45;
 gNoise = gNoise_mean+3.45*randn(length(gsyn),1);
 gNoise(gNoise < 0)=0;% [nS]
 
-gTotal = (gsyn*gsyn_scaler) + (gNoise*noise_scaler);
+gsyn = gsyn*gsyn_scaler;
+gNoise = gNoise*noise_scaler;
 
+gTotal = (gsyn) + (gNoise);
+
+% new as of 27/03/15
+%% calculate sodium conductance at the synapse
+ENa = 90; %mV from neuron paper Harris et al. 2015
+EK = -105; % mV
+
+gNa_synapse = gsyn / (1 - (ENa/EK));
+gNa_wholecell = gTotal / (1 - (ENa/EK));
 
 options = odeset('MaxStep',dt,'RelTol',1e-03,'OutputFcn',@myfun,'Event',@myEvent);
 tspan1   = 0:dt:DT;% to get full length of array
@@ -64,10 +74,23 @@ end
 %% main nested subfunction
     function ds = fxn(t,s)
         V = s(1);
+        
+        synapse_iNa    = -gNa_synapse(floor(t/dt)+1)*(V-ENa); % nS * mV = [pA]
+        Wholecell_iNa = -gNa_wholecell(floor(t/dt)+1)*(V-ENa); % nS * mV = [pA]
+        
+        Total_synaptic_current = -gsyn(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
+        
+        %% injected current
         iInj    = -gTotal(floor(t/dt)+1)*(V-EAMPA); % nS * mV = [pA]
         iInj = iInj / 1000; % [nA]
+        
         iInj_plot(floor(t/dt)+1)=iInj; % creates vector for plotting current inject over time
-        ds(1) = (EL - V + (Rm * iInj))/tauM;       % solves for V      
+        
+        Synaptic_Na_current(floor(t/dt)+1)= synapse_iNa / 1000; % nA
+        wholecell_Na_current(floor(t/dt)+1)= Wholecell_iNa / 1000; % nA
+        total_synaptic_current(floor(t/dt)+1)= Total_synaptic_current / 1000; % nA
+        
+        ds(1) = (EL - V + (Rm * iInj))/tauM;        % solves for V      
         ds     = ds';                               % transpose the vector of derivatives
         ds(isnan(ds)) = 0;                          % avoids NaN in the vector of derivatives
         ds(isinf(ds)) = 0;                          % avoids Inf in the vector of derivatives           
@@ -75,10 +98,10 @@ end
 
 %% add spikes into data
 data = data'; % flip it
+
 if length(data) > (DT/dt)+1
     data((DT/dt)+2:end)=[];
 end
-
 ind = zeros(length(data),1); % create index for threshold
 ind(data >= Vthresh) = 1; 
 data_AP = data;
