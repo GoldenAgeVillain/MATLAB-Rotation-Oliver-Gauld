@@ -58,20 +58,3 @@ for pp = 1:length(noise_scale_factors)
     end
 end
 
-
-for loop = 1:length(noise_scale_factors)
-        noise_scaler = noise_scale_factors(loop);
-    for p = 1:length(gsyn_scale_factors)
-        gsyn_scaler = gsyn_scale_factors(p);
-        fname1 = ['output/new_noise_model300315/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) '.mat'];
-        load(fname1)
-    for x = 1:nreps
-        
-            [TotalATP, NaATP, AP_ATP] = energy_calc(data_store{x,13},data_store{x,3})
-            
-            data_store{x,5} = NaATP; % calculate ATP used on synaptic Na current and APs
-            
-    end
-            save(fname1,'data_store');
-    end
-end
