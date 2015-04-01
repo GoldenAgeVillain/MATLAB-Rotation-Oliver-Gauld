@@ -48,7 +48,7 @@ CapacityEffiency = CapacityEffiency*100;
 CapacityEnergyEfficiency = CapacityEffiency ./ Energy_on_current;
 
 
-xaxis = 2.*gsyn_scale_factors; % to get x axis ticks, 2 = amplitude of non-scaled EPSConductance wave
+xaxis = 2.*gsyn_scale_factors; % to get x axis ticks, 2 = amplitude of EPSConductance wave
 cc=hsv(length(noise_scale_factors));
 
 mark = {'-o','-x','-d','-*','-<','->','-o'};

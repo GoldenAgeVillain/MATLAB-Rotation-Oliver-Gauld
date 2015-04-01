@@ -2,10 +2,10 @@ global nreps
 
 nreps = 50;
 
-gsyn_scale_factors = [0,1,5,10,20,30,40,50,70,90,100];
-noise_scale_factors = [0,0.1,0.5,0.8,1,1.125,1.25,2];
+gsyn_scale_factors = [0,1,5,10,20,40,50,75,100];
+noise_scale_factors = [0,0.5,1,1.5,2];
 
-%% run simulations to generate data
+%% batch simulations to generate data
 
 for pp = 1:length(noise_scale_factors)
     noise_scaler = noise_scale_factors(pp);
@@ -15,13 +15,19 @@ for pp = 1:length(noise_scale_factors)
 
         for i = 1:nreps   
             
-            [data, data_AP, APfreq, current,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, SynNaCurr, wholecell_Na_current,syntotalcurrent] = neuron_model(0,noise_scaler,gsyn_scaler);
+            [data, data_AP, APfreq, current,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, SynNaCurr, wholecell_Na_current] = neuron_model(0,noise_scaler,gsyn_scaler);
 
+            
+            
             data_store{i,1} = data_AP; % membrane voltage trace with APs
             data_store{i,2} = data;% membrane voltage trace without APs
             data_store{i,3} = APfreq; % Action potential Frequency in Hz
             data_store{i,4} = spiketrain; % input spike train, 
-            data_store{i,5} = energy_calc(SynNaCurr,data_store{i,3}); % calculate ATP used on synaptic Na current and APs
+            
+            %% calls energy calc function
+            [TotalATP, NaATP, AP_ATP] = energy_calc(SynNaCurr,data_store{i,3});
+            
+            data_store{i,5} = NaATP; % calculate ATP used on synaptic Na current and APs
             data_store{i,6} = noise_scaler; % noise scale factor
             data_store{i,7} = gsyn_scaler; % gsyn scale factor           
             data_store{i,8} = gsyn;           
@@ -30,13 +36,14 @@ for pp = 1:length(noise_scale_factors)
             data_store{i,11} = gNoise;        
             data_store{i,12} = gTotal;        
             data_store{i,13} = SynNaCurr; 
-            data_store{i,14} = wholecell_Na_current;        
-            data_store{i,15} = syntotalcurrent;               
+            data_store{i,14} = wholecell_Na_current;  
+            data_store{i,15} = TotalATP; 
+            data_store{i,16} = AP_ATP;              
         end
         
         %% save data array
-        mkdir(['output/new_noise_model250315/noisescale_' num2str(noise_scaler)])
-        fname1 = ['output/new_noise_model250315/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) '.mat'];
+        mkdir(['output/repetitions/noisescale_' num2str(noise_scaler)])
+        fname1 = ['output/repetitions/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '.mat'];
         save(fname1,'data_store');
 
         %% calculate and save MI and energy parameters
@@ -45,8 +52,26 @@ for pp = 1:length(noise_scale_factors)
         [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1),5); % calulates Mutual Info
 
         MI_energy_params = [MI, Htotal, final_Hnoise, AverageEnergyRate]; % all units in rate per sec
-        fname2 = ['output/new_noise_model250315/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) '_SummaryParams.mat'];
+        fname2 = ['output/repetitions/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '_SummaryParams.mat'];
         save(fname2,'MI_energy_params');
         
+    end
+end
+
+
+for loop = 1:length(noise_scale_factors)
+        noise_scaler = noise_scale_factors(loop);
+    for p = 1:length(gsyn_scale_factors)
+        gsyn_scaler = gsyn_scale_factors(p);
+        fname1 = ['output/new_noise_model300315/noisescale_' num2str(noise_scaler) '/gsyn_' num2str(gsyn_scaler) '.mat'];
+        load(fname1)
+    for x = 1:nreps
+        
+            [TotalATP, NaATP, AP_ATP] = energy_calc(data_store{x,13},data_store{x,3})
+            
+            data_store{x,5} = NaATP; % calculate ATP used on synaptic Na current and APs
+            
+    end
+            save(fname1,'data_store');
     end
 end
