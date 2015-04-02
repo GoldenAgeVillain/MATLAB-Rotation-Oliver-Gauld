@@ -30,7 +30,7 @@ for noiseCounter = 1:length(noise_scale_factors)
         %% if raw data doesnt exist, run the model to generate data
         if exist(my_path, 'file') == 0           
             for my_rep = 1:nreps   
-
+                
                 data_store = cell(nreps,16); % preallocate memory
                 
                 %% run the model
@@ -39,6 +39,7 @@ for noiseCounter = 1:length(noise_scale_factors)
                     gNoise, gTotal, SynapticNaCurrent, ...
                     wholecell_Na_current] = neuron_model(0,noise_scaler,gsyn_scaler);
 
+                % storing lots of variables
                 data_store{my_rep,1} = data_AP; % membrane voltage trace with APs
                 data_store{my_rep,2} = data;% membrane voltage trace without APs
                 data_store{my_rep,3} = APfreq; % Action potential Frequency in Hz
@@ -63,7 +64,6 @@ for noiseCounter = 1:length(noise_scale_factors)
             end 
         
             save(my_path,'data_store');
-            clear data_store
         end
                 
         %% calculate Mutual Information if needed
@@ -73,8 +73,11 @@ for noiseCounter = 1:length(noise_scale_factors)
             [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1),5); % calulates Mutual Info
             MI_energy_params = [MI, Htotal, final_Hnoise, AverageCurrentEnergyRate]; % all units in rate per sec
             
-            save(my_path2,'MI_energy_params');                
+            save(my_path2,'MI_energy_params');  
+
         end
+        clear data_store
+
     end  
 end
 
