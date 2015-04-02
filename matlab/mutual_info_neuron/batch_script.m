@@ -10,8 +10,9 @@ for noiseCounter = 1:length(noise_scale_factors)
     
     noise_scaler = noise_scale_factors(noiseCounter);
     
-    for gsynCounter = 1:length(gsyn_scale_factors)
+    for gsynCounter = 1:length(gsyn_scale_factors)          
         
+        data_store = cell(nreps,16); % preallocate memory
         gsyn_scaler = gsyn_scale_factors(gsynCounter);
 
         % directory and file paths
@@ -31,7 +32,6 @@ for noiseCounter = 1:length(noise_scale_factors)
         if exist(my_path, 'file') == 0           
             for my_rep = 1:nreps   
                 
-                data_store = cell(nreps,16); % preallocate memory
                 
                 %% run the model
                 [data, data_AP, APfreq, Injectedcurrent,...
