@@ -17,6 +17,11 @@ for noiseCounter = 1:length(noise_scale_factors)
 
         % directory and file paths
         basepath = 'Z:\Oliver\attwell_rotation\matlab\mutual_info_neuron\output\';
+        
+        if exist(basepath,'dir')==0 % checks what machine you're on
+            basepath = '/Users/olivergauld/Desktop/present/UCL/R2/attwell_rotation/matlab/mutual_info_neuron/output';
+        end
+        
         datafolder = [num2str(nreps) 'Reps\noisescale_' num2str(noise_scaler) '\'];
         RawDatafilename = ['RawData_gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '.mat'];
         SummaryFile = [ '/gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '_SummaryParams.mat'];
