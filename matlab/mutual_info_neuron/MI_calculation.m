@@ -1,10 +1,12 @@
 function [MI, Htotal, final_Hnoise] = MI_calculation(all_data_repeats,wordlength);
 
-    all_data_repeats = d3;
-    wordlength=5;
+    all_data_repeats = data_store;
+    wordlength=4;
     
     global nreps
 
+    nreps=length(data_store(:,1));
+    
     % organise the data
     for loop = 1:size(all_data_repeats,1)
         data_array(loop,:) = all_data_repeats{loop,1}';
