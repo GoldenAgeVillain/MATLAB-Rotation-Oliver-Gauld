@@ -11,6 +11,7 @@ function [Excitatory_cond,Inhib_cond] = BackgroundNoise(num_syn,num_Inhib_syn)
     dt = 0.5; % [ms]
     bins_per_sec = 1000 * (1/dt);
 
+    if num_syn ~= 0 
     for synloop = 1:num_syn
         ii=1;
         for i = 1:1
@@ -54,6 +55,7 @@ function [Excitatory_cond,Inhib_cond] = BackgroundNoise(num_syn,num_Inhib_syn)
 
         excitatory_synapses(synloop,:)=gsyn';
         clear spiketrain
+    clear synloop
 
     end
 
@@ -62,7 +64,9 @@ function [Excitatory_cond,Inhib_cond] = BackgroundNoise(num_syn,num_Inhib_syn)
         Excitatory_cond(i) = sum(excitatory_synapses(:,i));
     end
 
-    clear synloop
+    else
+        Excitatory_cond = zeros(1,2001)
+    end
 
     if num_Inhib_syn ~= 0
         for synloop = 1:num_Inhib_syn

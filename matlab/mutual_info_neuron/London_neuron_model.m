@@ -1,4 +1,4 @@
-function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, totalcond, gTotal, Synaptic_Na_current,wholecell_Na_current] = London_neuron_model(switchPlot,noise_scaler,gsyn_scaler,loopCount);
+function [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, totalcond, gTotal, Synaptic_Na_current,wholecell_Na_current] = London_neuron_model(switchPlot,Excit_synapses,gsyn_scaler,loopCount);
 
 global tstart dt DT loopCounter
 loopCounter = loopCount;
@@ -15,14 +15,15 @@ tauM = 30;      % ms
 
 DT = how_many_seconds * 1000; % ms
 
- rng('shuffle'); % restores rand generator for random syn noise
+seed    = 62;
+rng(seed);
 [spiketrain, gsyn] = rand_spike_train(how_many_seconds); % 10 seconds
 
 gsyn = gsyn*gsyn_scaler; 
 gsyn= gsyn';
 
-Excit_synapses = 160;
 Inhib_synapses = 0;
+ rng('shuffle'); % restores rand generator for random syn noise
 
 [totalcond,Inhib_cond] = BackgroundNoise(Excit_synapses,Inhib_synapses);
 totalcond =  totalcond(1:length(gsyn));
