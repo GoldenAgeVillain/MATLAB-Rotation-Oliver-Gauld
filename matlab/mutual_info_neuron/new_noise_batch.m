@@ -2,25 +2,44 @@ global nreps
 
 nreps = 500;
 
-gsyn_scale_factors = [0,1,5,10,20,40,50,55,75,100];
-noise_scale_factors = 1;%[0,0.5,1,1.25,1.5,2];
+gsyn_scale_factors = [30,20,10, 0,1,5,40,50,55,75,100];
 
-Excitatory_synapses = 160
-Inhibitory_synapses = 0
+Excitatory_synapses = [200 160 120 0 240 280 ];
+Inhibitory_synapses = 0;
 
 %% batch simulations to generate data
 
 for pp = 1:length(Excitatory_synapses)
     ExSyns = Excitatory_synapses(pp);
     
-    for p = 1:1;%length(gsyn_scale_factors)
+    for p = 1:length(gsyn_scale_factors)
         gsyn_scaler = gsyn_scale_factors(p);
+       
+        % directory and file paths
+        basepath = 'Z:\Oliver\attwell_rotation\matlab\mutual_info_neuron\output\';
+        
+        if exist(basepath,'dir')==0 % checks what machine you're on
+            basepath = '/Users/olivergauld/Desktop/present/UCL/R2/attwell_rotation/matlab/mutual_info_neuron/output';
+        end
+        
+        datafolder = ['/London_model2/' num2str(nreps) 'reps/ExSyn_num' num2str(ExSyns) '/'];
+        RawDatafilename = ['RawData_gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '.mat'];
+        SummaryFile = ['gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '_SummaryParams.mat'];
+    
+        my_path = [basepath datafolder RawDatafilename];
+        my_path2 = [basepath datafolder SummaryFile];
 
+        if exist([basepath datafolder],'dir') == 0
+           mkdir([basepath datafolder]) 
+        end
+        
+           %% if raw data doesnt exist, run the model to generate data
+        if exist(my_path, 'file') == 0  
         for i = 1:nreps   
             
-           % old one [data, data_AP, APfreq, current,spiketrain, gsyn, gNa_synapse, gNa_wholecell, gNoise, gTotal, SynNaCurr, wholecell_Na_current] = neuron_model(0,noise_scaler,gsyn_scaler);
-
-            [data, data_AP, APfreq, iInj_plot,spiketrain, gsyn, gNa_synapse, gNa_wholecell, totalcond, gTotal, Synaptic_Na_current,wholecell_Na_current] = London_neuron_model(0,1,0,i);
+            [data, data_AP, APfreq, iInj_plot,spiketrain,...
+                gsyn, gNa_synapse, gNa_wholecell, totalcond,...
+                gTotal, Synaptic_Na_current,wholecell_Na_current] = London_neuron_model(1,ExSyns,gsyn_scaler,i);
             
             data_store{i,1} = data_AP; % membrane voltage trace with APs
             data_store{i,2} = data;% membrane voltage trace without APs
@@ -45,19 +64,20 @@ for pp = 1:length(Excitatory_synapses)
         end
         
         %% save data array
-        mkdir(['TESToutput4/repetitions/noisescale_' num2str(ExSyns)])
-        fname1 = ['TESToutput4/repetitions/noisescale_' num2str(ExSyns) '/gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '.mat'];
-        save(fname1,'data_store');
+                    save(my_path,'data_store');
 
-        %% calculate and save MI and energy parameters
-        AverageEnergyRate = mean(horzcat(data_store{:,5})); %averages energy per second across all repetitions
+        end
+             
+        %% calculate Mutual Information if needed
+        if exist(my_path2, 'file') == 0
+            AverageCurrentEnergyRate = mean(horzcat(data_store{:,5})); %averages energy per second across all repetitions
+            
+            [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1),5); % calulates Mutual Info
+            MI_energy_params = [MI, Htotal, final_Hnoise, AverageCurrentEnergyRate]; % all units in rate per sec
+            
+            save(my_path2,'MI_energy_params');  
 
-        [MI, Htotal, final_Hnoise] = MI_calculation(data_store(:,1),5); % calulates Mutual Info
-
-        MI_energy_params = [MI, Htotal, final_Hnoise, AverageEnergyRate]; % all units in rate per sec
-        fname2 = ['TESToutput4/repetitions/noisescale_' num2str(ExSyns) '/gsyn_' num2str(gsyn_scaler) 'reps' num2str(nreps) '_SummaryParams.mat'];
-        save(fname2,'MI_energy_params');
-        
+        end
     end
 end
 
